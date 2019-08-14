@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>OpenID二维码Demo</title>
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="qrcode.min.js"></script>
+    <script type="text/javascript" src="./pako_deflate.min.js"></script>
+</head>
+<body>
+<div>
+    <div>OpenID二维码Demo</div>
+    <table style="width:280px;margin:15px 100px" >
+        <tbody>
+            <tr>
+                <td>客户端唯一标识:</td><td><input id="clientId" readonly="readonly" value=""/></td>
+            </tr>
+            <tr>
+                <td>二维码字符:</td><td><input id="qrcodeText" type="text" value="" readonly="readonly"  /></td>
+            </tr>
+            <tr>
+                <td><input id="createBtn" type="button" value="生成二维码"/> </td>
+            </tr>
+        </tbody>
+    </table>
+    <div id="authText"></div>
+</div>
+<div id="qrcode" style="width:200px; height:200px; margin:15px 100px"></div>
+<script type="text/javascript">
+    var qrcode = new QRCode(document.getElementById("qrcode"), {
+        width : 200,
+        height : 200
+    });
+
+    //定时取授权数据
+    setInterval(function() {
+        timeToGetAuth();
+    },2000);
+
+    var clientId =new Date().getTime();
+    $('#clientId').val(clientId);
+
+    function timeToGetAuth() {
+        $.ajax({
+            type: 'get',
+            contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+            url: "/qm/auth/get?clientid="+clientId,
+            success: function (data) {
+                var jsonData = JSON.parse(data);
+                if(jsonData["openId"]!=undefined && jsonData["openId"].length>0){
+                    $('#authText').html("<span style='color:red;'>授权成功,OpenId:"+jsonData["openId"] + " \tOpenToken:"+jsonData["openToken"]+"</span>");
+                }
+
+            },
+            error: function (data) {
+                $('#authText').html("error:" + data);
+            }
+        });
+    }
+
+    //绘制二维码
+    function makeCode () {
+        qrcode.makeCode($("#qrcodeText").val());
+    }
+
+    //请求二维码
+    $("#createBtn").on("click", function () {
+        $('#authText').html('');
+        clientId =new Date().getTime();
+        $('#clientId').val(clientId);
+        getQrCode();
+    });
+    
+    
+    function getQrCode() {
+        var param = {
+            clientid:clientId
+        };
+
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+            url: "/qm/qrcode",
+            data: param,
+            success: function (data) {
+                if(data["qrcode"]!=null){
+                    $("#qrcodeText").val(data["qrcode"]);
+                    makeCode();
+                }
+            },
+            error: function (data) {
+                alert("error:" + data.status);
+            }
+        });
+
+    }
+</script>
+</body>
+</html>

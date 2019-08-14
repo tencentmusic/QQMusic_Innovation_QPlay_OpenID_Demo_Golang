@@ -1,0 +1,9 @@
+OpenID_AppID                 = ""
+OpenID_PackageName           = ""
+OpenID_PrivateKey = """-----BEGIN PRIVATE KEY-----
+......
+-----END PRIVATE KEY-----"""
+
+OpenAPI_AppID               = ""
+OpenAPI_AppKey              = ""
+OpenAPI_AppPrivateKey       = ""

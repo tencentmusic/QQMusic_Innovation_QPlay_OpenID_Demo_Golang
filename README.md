@@ -1,5 +1,18 @@
 该示例代码将演示《QQ音乐OpenID接入指南(暂用名)》中"5 异构设备接入"章节。
 
+### 准备工作
+
+示例代码将使用到QQ音乐分配的一系列参数，请首先修改`config.toml`的如下参数：
+
+```
+OpenID_AppID                = "9527"
+OpenID_PackageName          = "com.company.package"
+OpenID_PrivateKey           = """-----BEGIN PRIVATE KEY-----ABCEDF"""
+OpenAPI_AppID               = "24681357"
+OpenAPI_AppKey              = "abcEDF"
+OpenAPI_AppPrivateKey       = "xyzXYZ"
+```
+
 ### 如何使用
 
 进入到`src`目录，执行如下命令：

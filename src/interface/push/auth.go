@@ -249,6 +249,7 @@ func (impl *AuthImpl) GetQrcodeString(w http.ResponseWriter, r *http.Request) {
 	encryptMap["callbackUrl"] = callbackUrl
 	resultJson, err := json.Marshal(encryptMap)
 	encryptString, err := encryptWithPublicKey(string(resultJson), string(QQMusicPublicKey1_1))
+	encryptString = url.QueryEscape(encryptString)
 
 	//访问OpenAPI获取二维码字符串
 	opiSource := "OpitrtqeGzopIlwxs_" + config.OpenAPI_AppID + "_" + config.OpenAPI_AppKey + "_" + config.OpenAPI_AppPrivateKey + "_" + nonce
